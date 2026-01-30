@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB49</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB1</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Latihan Kosakata</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: white;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 15px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .result {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .wrong { color: red; }
+  .correct { color: green; }
+  ol { text-align:left; max-height:400px; overflow:auto; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2 id="question"></h2>
+  <input type="text" id="answerInput" placeholder="Tulis jawaban di sini">
+  <br>
+  <button id="nextBtn">Selanjutnya</button>
+</div>
+
+<script>
+let questions = [
+{ soal: "광물 자원 개발 생산", jawaban: "pengembangan dan produksi sumber daya mineral" },
+{ soal: "지주를 세우다", jawaban: "menetapkan pemilik tanah" },
+{ soal: "폭약", jawaban: "bahan peledak" },
+{ soal: "레일을 깔다", jawaban: "meletakkan rel" },
+{ soal: "갱도 시설", jawaban: "fasilitas terowongan" },
+{ soal: "석탄을 부수다 / 깨다", jawaban: "memecahkan batu bara" },
+{ soal: "채광 및 광석", jawaban: "penambangan dan bijih" },
+{ soal: "석탄을 퍼 올리다", jawaban: "mengambil / mengeruk batu bara" },
+{ soal: "접속", jawaban: "koneksi" },
+{ soal: "착암기", jawaban: "bor batu" },
+{ soal: "막장 / 채광장", jawaban: "lokasi / area pertambangan" },
+{ soal: "함마", jawaban: "palu (hammer)" },
+{ soal: "광부", jawaban: "pekerja tambang" },
+{ soal: "컨베이어", jawaban: "konveyor" },
+{ soal: "수갱", jawaban: "poros vertikal / drainase" },
+{ soal: "스크레이퍼", jawaban: "pengikis (scraper)" },
+{ soal: "갱구", jawaban: "pintu masuk terowongan tambang" },
+{ soal: "덩어리", jawaban: "gumpalan / bongkahan" },
+{ soal: "수평갱", jawaban: "poros horizontal" },
+{ soal: "채탄", jawaban: "penambangan batu bara" },
+{ soal: "선탄장", jawaban: "tempat pencucian / pemilahan batu bara" },
+{ soal: "간격", jawaban: "jarak" },
+{ soal: "인차", jawaban: "mantrip (angkutan pekerja tambang)" },
+{ soal: "돌", jawaban: "batu" },
+{ soal: "광차", jawaban: "kereta tambang" },
+{ soal: "거의", jawaban: "hampir" },
+{ soal: "티플링실", jawaban: "ruang tippling" },
+{ soal: "버력", jawaban: "batuan sisa / kekuatan" },
+{ soal: "일손", jawaban: "tenaga kerja" },
+{ soal: "모시고 올까요", jawaban: "mari jemput dan datang bersama" },
+{ soal: "탄광", jawaban: "tambang batu bara" },
+{ soal: "골라내고 있어요", jawaban: "sedang memilih / memilah" },
+{ soal: "석탄", jawaban: "batu bara" },
+{ soal: "손발이 잘 맞아요", jawaban: "kerja sama yang baik" },
+{ soal: "석회석", jawaban: "batu kapur" },
+{ soal: "전선", jawaban: "kabel listrik" },
+{ soal: "마지막", jawaban: "terakhir" },
+{ soal: "롱노즈 플라이어", jawaban: "tang hidung panjang" },
+{ soal: "광석", jawaban: "bijih" },
+{ soal: "자", jawaban: "penggaris" },
+{ soal: "갱도", jawaban: "terowongan tambang" },
+{ soal: "전선 피복", jawaban: "pelapis / penutup kabel" },
+{ soal: "바위에 구멍을 뚫다", jawaban: "melubangi batu" },
+{ soal: "동일하다", jawaban: "sama" },
+{ soal: "폭약을 설치하다", jawaban: "memasang bahan peledak" },
+{ soal: "구리선을 트위스트하다", jawaban: "memutar kawat tembaga" },
+{ soal: "발파하다 / 폭파하다", jawaban: "meledakkan" },
+{ soal: "촘촘하게", jawaban: "rapat / padat" },
+{ soal: "버력을 골라내다", jawaban: "memilah batuan sisa" },
+{ soal: "깔끔하게", jawaban: "dengan bersih / rapi" },
+{ soal: "부정적인", jawaban: "negatif" }
+];
+
+// Acak soal
+questions = questions.sort(() => Math.random() - 0.5);
+
+let index = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionEl = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const nextBtn = document.getElementById("nextBtn");
+const card = document.querySelector(".card");
+
+function showQuestion() {
+  questionEl.textContent = "Soal " + (index + 1) + ": " + questions[index].soal;
+  answerInput.value = "";
+  answerInput.focus();
+}
+
+nextBtn.addEventListener("click", () => {
+  const userAnswer = answerInput.value.trim().toLowerCase();
+  userAnswers[index] = userAnswer; // simpan jawaban sesuai index
+
+  if (userAnswer === questions[index].jawaban) {
+    score++;
+  }
+
+  index++;
+  if (index < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  let answerList = "";
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.jawaban) {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span></li>`;
+    } else {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span><br>
+                     Jawaban kamu: <span class="wrong">${userAnswers[i] || "(kosong)"}</span></li>`;
+    }
+  });
+
+  card.innerHTML = `
+    <h2>Hasil</h2>
+    <p class="result">Nilai: ${score} / ${questions.length}</p>
+    <hr>
+    <p>Kunci Jawaban:</p>
+    <ol>${answerList}</ol>
+  `;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
